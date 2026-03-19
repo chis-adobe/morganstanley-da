@@ -1,0 +1,31 @@
+{
+  "variantName": "cards-numbered",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-03-19T20:30:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://us.etrade.com/bank",
+    "originPage": "banking hub landing page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "numbered-benefits",
+    "imagePattern": "noimg"
+  },
+  "contentPattern": {
+    "structure": "large-number + title + description",
+    "buttonCount": 0,
+    "imageCount": 0
+  },
+  "reuseGuidance": {
+    "suitableFor": ["numbered benefit sections", "step-by-step feature highlights", "value proposition grids"],
+    "notSuitableFor": ["image card grids", "article listings"]
+  },
+  "usage": {
+    "pagesUsing": ["content/bank"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-19T20:30:00.000Z"
+  }
+}

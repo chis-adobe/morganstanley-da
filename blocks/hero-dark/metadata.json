@@ -1,0 +1,31 @@
+{
+  "variantName": "hero-dark",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-03-19T20:30:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://us.etrade.com/bank",
+    "originPage": "banking hub landing page",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "product-landing-hero",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "eyebrow + heading + description + CTA + image",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": ["product landing pages", "banking hub pages", "dark-themed hero sections"],
+    "notSuitableFor": ["blog posts", "article pages", "light-themed pages"]
+  },
+  "usage": {
+    "pagesUsing": ["content/bank"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-19T20:30:00.000Z"
+  }
+}

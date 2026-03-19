@@ -1,0 +1,164 @@
+{
+  "templates": [
+    {
+      "name": "product-detail-page",
+      "urls": [
+        "https://us.etrade.com/bank",
+        "https://us.etrade.com/bank/premium-savings-account",
+        "https://us.etrade.com/bank/max-rate-checking",
+        "https://us.etrade.com/bank/checking",
+        "https://us.etrade.com/bank/certificate-of-deposit",
+        "https://us.etrade.com/bank/line-of-credit"
+      ],
+      "description": "Product detail page with dark hero, feature highlights, benefits grid, promotional offers, awards, education cards, FAQ accordion, and CTA sections",
+      "blocks": [
+        {
+          "name": "hero-dark",
+          "instances": [
+            ".componentContainer:first-of-type > section .columncontrol:first-of-type"
+          ]
+        },
+        {
+          "name": "cards-product",
+          "instances": [
+            ".card-container.super-card-one"
+          ]
+        },
+        {
+          "name": "cards-numbered",
+          "instances": [
+            ".card-container.pricing-card"
+          ]
+        },
+        {
+          "name": "cards-article",
+          "instances": [
+            ".card-container.image-card",
+            ".card-container.super-card-two"
+          ]
+        },
+        {
+          "name": "columns-award",
+          "instances": [
+            "section:has(img.responsive-imageET[alt*='Awards']) .columncontrol"
+          ]
+        },
+        {
+          "name": "columns-feature",
+          "instances": [
+            "section.content-prospect:has(.rounded-corner-image) .columncontrol"
+          ]
+        },
+        {
+          "name": "accordion-faq",
+          "instances": [
+            ".accordion-section .accordion-group"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "hero",
+          "name": "Hero Section",
+          "selector": ".componentContainer:first-of-type > section",
+          "style": "dark",
+          "blocks": [
+            "hero-dark"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "product-cards",
+          "name": "Product Cards Section",
+          "selector": "section.content-prospect:has(.super-card-one)",
+          "style": null,
+          "blocks": [
+            "cards-product"
+          ],
+          "defaultContent": [
+            ".columncontrol:first-of-type .richTextEditor h2",
+            ".columncontrol:first-of-type .richTextEditor .text-default",
+            ".richTextEditor:has(.currentDate)"
+          ]
+        },
+        {
+          "id": "benefits",
+          "name": "Benefits Section",
+          "selector": "section:has(.pricing-card)",
+          "style": null,
+          "blocks": [
+            "cards-numbered"
+          ],
+          "defaultContent": [
+            ".col-centered-8 h2"
+          ]
+        },
+        {
+          "id": "limited-offers",
+          "name": "Limited Time Offers Section",
+          "selector": "section.content-prospect:has(.image-card)",
+          "style": null,
+          "blocks": [
+            "cards-article"
+          ],
+          "defaultContent": [
+            "h2.header-2xl.text-center"
+          ]
+        },
+        {
+          "id": "awards",
+          "name": "Awards & Recognition Section",
+          "selector": "section:has(img.responsive-imageET[alt*='Awards'])",
+          "style": null,
+          "blocks": [
+            "columns-award"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "lending",
+          "name": "Lending Solutions Section",
+          "selector": "section.content-prospect:has(.rounded-corner-image)",
+          "style": "dark",
+          "blocks": [
+            "columns-feature"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "education",
+          "name": "Education & Resources Section",
+          "selector": "section:has(.super-card-two)",
+          "style": null,
+          "blocks": [
+            "cards-article"
+          ],
+          "defaultContent": [
+            ".richTextEditor .eyebrow",
+            ".richTextEditor .header-3xl"
+          ]
+        },
+        {
+          "id": "faq",
+          "name": "FAQ Section",
+          "selector": "section:has(.accordion-section)",
+          "style": "light-gray",
+          "blocks": [
+            "accordion-faq"
+          ],
+          "defaultContent": [
+            "h2.header-3xl.text-center"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "reference-data-page",
+      "urls": [
+        "https://us.etrade.com/bank/bank-rates"
+      ],
+      "description": "Reference data page with tabbed interface containing rate tables, fee schedules, and account comparison data",
+      "blocks": []
+    }
+  ]
+}

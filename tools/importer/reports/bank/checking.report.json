@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "url": "https://us.etrade.com/bank/checking",
+  "path": "bank/checking",
+  "timestamp": "2026-03-19T20:52:00.834Z",
+  "title": "E*TRADE Checking Account: $0 Fee Online Banking",
+  "template": "product-detail-page",
+  "blocks": [
+    "hero-dark",
+    "cards-article",
+    "cards-article",
+    "cards-article",
+    "cards-article"
+  ]
+}

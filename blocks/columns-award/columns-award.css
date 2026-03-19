@@ -1,0 +1,33 @@
+.columns-award > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns-award img {
+  width: 100%;
+}
+
+.columns-award > div > div {
+  order: 1;
+}
+
+.columns-award > div > .columns-award-img-col {
+  order: 0;
+}
+
+.columns-award > div > .columns-award-img-col img {
+  display: block;
+}
+
+@media (width >= 900px) {
+  .columns-award > div {
+    align-items: center;
+    flex-direction: unset;
+    gap: 24px;
+  }
+
+  .columns-award > div > div {
+    flex: 1;
+    order: unset;
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "variantName": "cards-article",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-03-19T20:30:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://us.etrade.com/bank",
+    "originPage": "banking hub landing page",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "standard",
+    "purpose": "article-listing",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + title + description + read-more-link",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": ["education/article sections", "blog card listings", "promotional offer cards with images"],
+    "notSuitableFor": ["text-only card grids", "product comparison cards"]
+  },
+  "usage": {
+    "pagesUsing": ["content/bank"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-19T20:30:00.000Z"
+  }
+}

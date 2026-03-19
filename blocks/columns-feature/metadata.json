@@ -1,0 +1,31 @@
+{
+  "variantName": "columns-feature",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-03-19T20:30:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://us.etrade.com/bank",
+    "originPage": "banking hub landing page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "dark",
+    "density": "spacious",
+    "purpose": "feature-showcase",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "eyebrow + heading + description + disclaimer + CTA + device-image",
+    "buttonCount": 1,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": ["feature showcase sections with dark background", "product highlight with device mockup", "lending/LOC promotional sections"],
+    "notSuitableFor": ["light-themed columns", "multi-row column layouts", "award displays"]
+  },
+  "usage": {
+    "pagesUsing": ["content/bank"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-19T20:30:00.000Z"
+  }
+}

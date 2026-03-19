@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "url": "https://us.etrade.com/bank/certificate-of-deposit",
+  "path": "bank/certificate-of-deposit",
+  "timestamp": "2026-03-19T20:52:06.932Z",
+  "title": "Certificate of Deposit | Compare CD Rates | E*TRADE",
+  "template": "product-detail-page",
+  "blocks": [
+    "hero-dark",
+    "cards-article",
+    "cards-article",
+    "cards-article",
+    "cards-article"
+  ]
+}
