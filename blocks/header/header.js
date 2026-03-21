@@ -43,7 +43,9 @@ function decorateLanguage(btn) {
     if (!menu) {
       const content = document.createElement('div');
       content.classList.add('block-content');
-      const fragment = await loadFragment(`${locale.prefix}${HEADER_PATH}/languages`);
+      const fragment = await loadFragment(
+        `${locale.prefix}${HEADER_PATH}/languages`,
+      );
       menu = document.createElement('div');
       menu.className = 'language menu';
       menu.append(fragment);
@@ -71,7 +73,7 @@ function decorateScheme(btn) {
     body.classList.remove(theme.remove);
     body.classList.add(theme.add);
     localStorage.setItem('color-scheme', theme.add);
-    // Re-calculatie section schemes
+    // Re-calculate section schemes
     const sections = document.querySelectorAll('.section');
     for (const section of sections) {
       setColorScheme(section);
@@ -101,40 +103,54 @@ async function decorateAction(header, pattern) {
     btn.append(textSpan);
   }
   const wrapper = document.createElement('div');
-  wrapper.className = `action-wrapper ${icon.classList[1].replace('icon-', '')}`;
+  wrapper.className = [
+    'action-wrapper',
+    icon.classList[1].replace('icon-', ''),
+  ].join(' ');
   wrapper.append(btn);
-  link.parentElement.parentElement.replaceChild(wrapper, link.parentElement);
+  link.parentElement.parentElement
+    .replaceChild(wrapper, link.parentElement);
 
-  if (pattern === '/tools/widgets/language') decorateLanguage(btn);
-  if (pattern === '/tools/widgets/scheme') decorateScheme(btn);
-  if (pattern === '/tools/widgets/toggle') decorateNavToggle(btn);
+  if (pattern === '/tools/widgets/language') {
+    decorateLanguage(btn);
+  }
+  if (pattern === '/tools/widgets/scheme') {
+    decorateScheme(btn);
+  }
+  if (pattern === '/tools/widgets/toggle') {
+    decorateNavToggle(btn);
+  }
 }
 
-function decorateMenu() {
-  // TODO: finish single menu support
-  return null;
-}
-
-function decorateMegaMenu(li) {
-  const menu = li.querySelector('.fragment-content');
-  if (!menu) return null;
+function decorateMegaMenu(li, panel) {
+  if (!panel) return null;
   const wrapper = document.createElement('div');
   wrapper.className = 'mega-menu';
-  wrapper.append(menu);
+  while (panel.firstChild) {
+    wrapper.append(panel.firstChild);
+  }
   li.append(wrapper);
   return wrapper;
 }
 
-function decorateNavItem(li) {
+function decorateNavItem(li, megaMenuPanel) {
   li.classList.add('main-nav-item');
-  const link = li.querySelector(':scope > p > a');
-  if (link) link.classList.add('main-nav-link');
-  const menu = decorateMegaMenu(li) || decorateMenu(li);
+  const link = li.querySelector(':scope > p > a')
+    || li.querySelector(':scope > a');
+  if (link) {
+    link.classList.add('main-nav-link');
+    link.classList.remove('button');
+    const bc = link.closest('.button-container');
+    if (bc) bc.classList.remove('button-container');
+  }
+  const menu = decorateMegaMenu(li, megaMenuPanel);
   if (!menu) return;
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    toggleMenu(li);
-  });
+  if (link) {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleMenu(li);
+    });
+  }
 }
 
 function decorateBrandSection(section) {
@@ -151,7 +167,7 @@ function decorateBrandSection(section) {
   }
 }
 
-function decorateNavSection(section) {
+function decorateNavSection(section, megaMenuPanels = []) {
   section.classList.add('main-nav-section');
   const navContent = section.querySelector('.default-content');
   const navList = section.querySelector('ul');
@@ -162,9 +178,14 @@ function decorateNavSection(section) {
   nav.append(navList);
   navContent.append(nav);
 
-  const mainNavItems = section.querySelectorAll('nav > ul > li');
-  for (const navItem of mainNavItems) {
-    decorateNavItem(navItem);
+  const items = [
+    ...section.querySelectorAll('nav > ul > li'),
+  ];
+  let panelIdx = 0;
+  for (const navItem of items) {
+    const panel = panelIdx < megaMenuPanels.length
+      ? megaMenuPanels[panelIdx++] : null;
+    decorateNavItem(navItem, panel);
   }
 }
 
@@ -173,10 +194,24 @@ async function decorateActionSection(section) {
 }
 
 async function decorateHeader(fragment) {
-  const sections = fragment.querySelectorAll(':scope > .section');
-  if (sections[0]) decorateBrandSection(sections[0]);
-  if (sections[1]) decorateNavSection(sections[1]);
-  if (sections[2]) decorateActionSection(sections[2]);
+  const sections = [
+    ...fragment.querySelectorAll(':scope > .section'),
+  ];
+  if (sections.length < 3) return;
+
+  // First section = brand
+  decorateBrandSection(sections[0]);
+
+  // Last section = actions/tools
+  decorateActionSection(sections[sections.length - 1]);
+
+  // Second section = nav links
+  // Sections 2..n-1 = mega menu panels (matched to nav items)
+  const megaMenuPanels = sections.slice(2, -1);
+  decorateNavSection(sections[1], megaMenuPanels);
+
+  // Remove consumed mega menu sections from DOM
+  megaMenuPanels.forEach((panel) => panel.remove());
 
   for (const pattern of HEADER_ACTIONS) {
     decorateAction(fragment, pattern);
@@ -191,7 +226,9 @@ export default async function init(el) {
   const headerMeta = getMetadata('header');
   const path = headerMeta || HEADER_PATH;
   try {
-    const fragment = await loadFragment(`${locale.prefix}${path}`);
+    const fragment = await loadFragment(
+      `${locale.prefix}${path}`,
+    );
     fragment.classList.add('header-content');
     await decorateHeader(fragment);
     el.append(fragment);

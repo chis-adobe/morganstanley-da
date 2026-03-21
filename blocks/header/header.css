@@ -297,15 +297,10 @@ header {
     }
 
     .mega-menu {
-      > .fragment-content {
-        display: grid;
-        grid-template-columns: repeat(var(--mega-columns), 1fr);
+      > .default-content,
+      > .block-content {
         max-width: var(--grid-container-width);
         margin: 0 auto;
-
-        .section {
-          margin-block: initial;
-        }
       }
     }
 
