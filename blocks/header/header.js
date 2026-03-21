@@ -141,7 +141,8 @@ function decorateBrandSection(section) {
   section.classList.add('brand-section');
   const brandLink = section.querySelector('a');
   if (!brandLink) return;
-  const textNodes = [...brandLink.childNodes].filter((n) => n.nodeType === 3 && n.textContent.trim());
+  const textNodes = [...brandLink.childNodes]
+    .filter((n) => n.nodeType === 3 && n.textContent.trim());
   if (textNodes.length) {
     const span = document.createElement('span');
     span.className = 'brand-text';
