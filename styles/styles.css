@@ -319,6 +319,20 @@ a {
 
 .section.light-gray {
   background-color: var(--color-gray-100);
+  color: var(--color-dark);
+}
+
+.section.light-gray h1,
+.section.light-gray h2,
+.section.light-gray h3,
+.section.light-gray h4,
+.section.light-gray p,
+.section.light-gray a {
+  color: var(--color-dark);
+}
+
+.section.light-gray summary {
+  color: var(--color-dark);
 }
 
 main {

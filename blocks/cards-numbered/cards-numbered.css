@@ -1,8 +1,15 @@
-/* cards-numbered: Numbered benefit cards in a horizontal row */
+/* cards-numbered: Numbered benefit cards with border, content stacked vertically */
 .block-content:has(.cards-numbered) {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
+}
+
+.cards-numbered {
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  padding: 24px;
+  background-color: var(--color-background);
 }
 
 .cards-numbered > ul {
@@ -13,37 +20,37 @@
 
 .cards-numbered > ul > li {
   display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-
-.cards-numbered .cards-numbered-card-image {
-  line-height: 1;
+  flex-direction: column;
+  gap: 8px;
 }
 
 /* Number styling */
 .cards-numbered > ul > li > div:first-child {
-  font-size: 48px;
+  font-size: 56px;
   font-weight: 700;
   color: var(--color-green-500);
   line-height: 1;
-  flex-shrink: 0;
-  min-width: 40px;
 }
 
-.cards-numbered .cards-numbered-card-body h3,
 .cards-numbered > ul > li > div:nth-child(2) h3 {
   font-size: var(--heading-font-size-xs);
   margin: 0 0 8px;
+  font-weight: 700;
 }
 
-.cards-numbered .cards-numbered-card-body,
-.cards-numbered > ul > li > div:nth-child(2) {
+.cards-numbered > ul > li > div:nth-child(2),
+.cards-numbered > ul > li > div:last-child {
   font-size: var(--body-font-size-s);
+  line-height: 1.5;
 }
 
-.cards-numbered .cards-numbered-card-body p {
+.cards-numbered > ul > li > div:last-child p {
   margin: 0;
+}
+
+.cards-numbered > ul > li > div:last-child a {
+  color: var(--color-link);
+  font-weight: 600;
 }
 
 @media (width >= 600px) {

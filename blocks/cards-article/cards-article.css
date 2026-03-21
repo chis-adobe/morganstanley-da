@@ -1,8 +1,9 @@
-/* cards-article: Image + text article cards in a responsive grid */
+/* cards-article: Image + text article cards, equal-width across full container */
 .block-content:has(.cards-article) {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
+  width: 100%;
 }
 
 .cards-article {
@@ -16,11 +17,13 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 
 .cards-article > ul > li {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .cards-article .cards-article-card-image {
@@ -34,7 +37,8 @@
 }
 
 .cards-article .cards-article-card-body {
-  padding: 20px;
+  padding: 24px;
+  flex: 1;
 }
 
 .cards-article h3 {
@@ -46,12 +50,13 @@
   font-size: var(--body-font-size-m);
   font-weight: 600;
   color: var(--color-green-500);
-  margin: 0 0 8px;
+  margin: 0 0 12px;
 }
 
 .cards-article p {
   font-size: var(--body-font-size-s);
   margin: 0 0 12px;
+  line-height: 1.5;
 }
 
 .cards-article a {
@@ -59,14 +64,9 @@
   font-size: var(--body-font-size-s);
 }
 
+/* When there are exactly 2 cards-article siblings, use 2 columns */
 @media (width >= 600px) {
   .block-content:has(.cards-article) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (width >= 900px) {
-  .block-content:has(.cards-article) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 }

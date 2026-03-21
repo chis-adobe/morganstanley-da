@@ -5,43 +5,54 @@
 
 .columns-award > div {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
+  flex-direction: row;
+  align-items: center;
+  gap: 48px;
+}
+
+.columns-award > div > div {
+  flex: 1;
+}
+
+.columns-award > div > div:last-child {
+  flex: 0 0 280px;
+  text-align: center;
 }
 
 .columns-award img {
   width: 100%;
-  max-width: 300px;
+  max-width: 280px;
   height: auto;
   display: block;
   margin: 0 auto;
 }
 
 .columns-award h3 {
-  font-size: var(--heading-font-size-xs);
-  margin: 0 0 8px;
+  font-size: var(--body-font-size-xs);
+  margin: 0 0 12px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--color-gray-600);
+  letter-spacing: 2px;
+  color: var(--color-gray-500);
+  font-weight: 600;
 }
 
 .columns-award h2 {
   font-size: var(--heading-font-size-l);
   margin: 0 0 16px;
+  line-height: 1.3;
 }
 
-@media (width >= 900px) {
+.columns-award p {
+  margin: 0 0 8px;
+}
+
+@media (width < 600px) {
   .columns-award > div {
-    flex-direction: row;
-    align-items: center;
-    gap: 48px;
+    flex-direction: column;
+    text-align: center;
   }
 
-  .columns-award > div > div {
-    flex: 1;
-  }
-
-  .columns-award > div > .columns-award-img-col {
-    flex: 0 0 300px;
+  .columns-award > div > div:last-child {
+    flex: 0 0 auto;
   }
 }
