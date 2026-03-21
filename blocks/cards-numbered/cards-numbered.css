@@ -1,27 +1,59 @@
+/* cards-numbered: Numbered benefit cards in a horizontal row */
+.block-content:has(.cards-numbered) {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
 .cards-numbered > ul {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  gap: 24px;
 }
 
 .cards-numbered > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
-}
-
-.cards-numbered .cards-numbered-card-body {
-  margin: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
 }
 
 .cards-numbered .cards-numbered-card-image {
-  line-height: 0;
+  line-height: 1;
 }
 
-.cards-numbered > ul > li img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+/* Number styling */
+.cards-numbered > ul > li > div:first-child {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--color-green-500);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 40px;
+}
+
+.cards-numbered .cards-numbered-card-body h3,
+.cards-numbered > ul > li > div:nth-child(2) h3 {
+  font-size: var(--heading-font-size-xs);
+  margin: 0 0 8px;
+}
+
+.cards-numbered .cards-numbered-card-body,
+.cards-numbered > ul > li > div:nth-child(2) {
+  font-size: var(--body-font-size-s);
+}
+
+.cards-numbered .cards-numbered-card-body p {
+  margin: 0;
+}
+
+@media (width >= 600px) {
+  .block-content:has(.cards-numbered) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .block-content:has(.cards-numbered) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
