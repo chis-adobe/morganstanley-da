@@ -12,7 +12,6 @@ import accordionFaqParser from './parsers/accordion-faq.js';
 
 // TRANSFORMER IMPORTS
 import etradeCleanupTransformer from './transformers/etrade-cleanup.js';
-import etradeSectionsTransformer from './transformers/etrade-sections.js';
 
 // PARSER REGISTRY
 const parsers = {
@@ -135,10 +134,9 @@ const PAGE_TEMPLATE = {
   ],
 };
 
-// TRANSFORMER REGISTRY
+// TRANSFORMER REGISTRY (sections handled inline before parsers)
 const transformers = [
   etradeCleanupTransformer,
-  ...(PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [etradeSectionsTransformer] : []),
 ];
 
 /**
@@ -195,6 +193,23 @@ export default {
     // 2. Find blocks on page using embedded template
     const pageBlocks = findBlocksOnPage(document, PAGE_TEMPLATE);
 
+    // 2.5. Detect section boundaries BEFORE parsers modify the DOM
+    //      (section selectors use :has() on elements that parsers will replace)
+    const sectionBoundaries = [];
+    if (PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1) {
+      PAGE_TEMPLATE.sections.forEach((section, index) => {
+        const selectors = Array.isArray(section.selector) ? section.selector : [section.selector];
+        let sectionEl = null;
+        for (const sel of selectors) {
+          try { sectionEl = document.querySelector(sel); } catch (e) { /* skip bad selector */ }
+          if (sectionEl) break;
+        }
+        if (sectionEl) {
+          sectionBoundaries.push({ element: sectionEl, section, index });
+        }
+      });
+    }
+
     // 3. Parse each block using registered parsers
     pageBlocks.forEach((block) => {
       const parser = parsers[block.name];
@@ -207,7 +222,25 @@ export default {
       }
     });
 
-    // 4. Execute afterTransform transformers (final cleanup + section breaks/metadata)
+    // 3.5. Insert section breaks using pre-parser boundary references
+    //      Process in reverse order to avoid shifting DOM positions
+    [...sectionBoundaries].reverse().forEach(({ element: sectionEl, section, index }) => {
+      // Add section-metadata block after the section if it has a style
+      if (section.style) {
+        const sectionMetadata = WebImporter.Blocks.createBlock(document, {
+          name: 'Section Metadata',
+          cells: [['style', section.style]],
+        });
+        sectionEl.after(sectionMetadata);
+      }
+      // Insert HR before each section (except the first one)
+      if (index > 0) {
+        const hr = document.createElement('hr');
+        sectionEl.before(hr);
+      }
+    });
+
+    // 4. Execute afterTransform transformers (final cleanup)
     executeTransformers('afterTransform', main, payload);
 
     // 5. Apply WebImporter built-in rules

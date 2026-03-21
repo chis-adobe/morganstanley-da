@@ -23,17 +23,33 @@ export default function transform(hookName, element, payload) {
 
   if (hookName === TransformHook.afterTransform) {
     // Remove non-authorable site chrome
-    // header#mainHeader: site header with nav and utility bar (line 3-826)
+    // header: bare <header> tag wrapping div#mainHeader (line 3-827)
     // footer#mainFooter: site footer with links and disclaimers (line 1955+)
     // .sticky-cta-xf: sticky CTA bar overlay (line 1927-1951)
     // .skip-navigation: accessibility skip link (line 7)
     WebImporter.DOMUtils.remove(element, [
-      'header#mainHeader',
+      'header',
       'footer#mainFooter',
+      'footer',
       '.sticky-cta-xf',
       '.skip-navigation',
       'iframe',
     ]);
+
+    // Remove tracking pixels (1x1 images from analytics/ad networks)
+    element.querySelectorAll('img').forEach((img) => {
+      const src = img.getAttribute('src') || '';
+      if (src.match(/doubleclick\.net|bing\.com\/action|analytics\.twitter|t\.co\/1\/i|adentifi\.com|podscribe\.com|cognitivlabs\.com|yahoo\.com\/sp/)) {
+        img.remove();
+      }
+    });
+
+    // Remove empty paragraphs that only contained tracking pixels
+    element.querySelectorAll('p').forEach((p) => {
+      if (!p.textContent.trim() && !p.querySelector('img, a, table, div')) {
+        p.remove();
+      }
+    });
 
     // Clean tracking attributes from all elements
     element.querySelectorAll('[data-cmp-link-accessibility-enabled]').forEach((el) => {

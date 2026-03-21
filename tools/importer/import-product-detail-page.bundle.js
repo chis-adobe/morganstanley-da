@@ -162,11 +162,14 @@ var CustomImportScript = (() => {
   function parse7(element, { document }) {
     const items = element.querySelectorAll("li > .accordion-item-wrapper, li");
     const cells = [];
+    const seenQuestions = /* @__PURE__ */ new Set();
     items.forEach((item) => {
       const questionEl = item.querySelector(".accordion-trigger__text, .accordion-trigger span:last-child, h4");
       const answerEl = item.querySelector('section[id$="-panel"] > div, .accordion-item > section > div');
       if (questionEl && answerEl) {
-        const questionText = questionEl.textContent.trim();
+        const questionText = questionEl.textContent.trim().replace(/^expand_more\s*/, "");
+        if (seenQuestions.has(questionText) || !answerEl.textContent.trim()) return;
+        seenQuestions.add(questionText);
         const questionP = document.createElement("p");
         questionP.textContent = questionText;
         cells.push([questionP, answerEl]);
@@ -189,49 +192,27 @@ var CustomImportScript = (() => {
     }
     if (hookName === TransformHook.afterTransform) {
       WebImporter.DOMUtils.remove(element, [
-        "header#mainHeader",
+        "header",
         "footer#mainFooter",
+        "footer",
         ".sticky-cta-xf",
         ".skip-navigation",
         "iframe"
       ]);
+      element.querySelectorAll("img").forEach((img) => {
+        const src = img.getAttribute("src") || "";
+        if (src.match(/doubleclick\.net|bing\.com\/action|analytics\.twitter|t\.co\/1\/i|adentifi\.com|podscribe\.com|cognitivlabs\.com|yahoo\.com\/sp/)) {
+          img.remove();
+        }
+      });
+      element.querySelectorAll("p").forEach((p) => {
+        if (!p.textContent.trim() && !p.querySelector("img, a, table, div")) {
+          p.remove();
+        }
+      });
       element.querySelectorAll("[data-cmp-link-accessibility-enabled]").forEach((el) => {
         el.removeAttribute("data-cmp-link-accessibility-enabled");
       });
-    }
-  }
-
-  // tools/importer/transformers/etrade-sections.js
-  var TransformHook2 = { beforeTransform: "beforeTransform", afterTransform: "afterTransform" };
-  function transform2(hookName, element, payload) {
-    if (hookName === TransformHook2.afterTransform) {
-      const { document } = payload;
-      const template = payload.template;
-      if (!template || !template.sections || template.sections.length < 2) return;
-      const sections = [...template.sections].reverse();
-      for (const section of sections) {
-        const selectors = Array.isArray(section.selector) ? section.selector : [section.selector];
-        let sectionEl = null;
-        for (const sel of selectors) {
-          try {
-            sectionEl = element.querySelector(sel);
-          } catch (e) {
-          }
-          if (sectionEl) break;
-        }
-        if (!sectionEl) continue;
-        if (section.style) {
-          const sectionMetadata = WebImporter.Blocks.createBlock(document, {
-            name: "Section Metadata",
-            cells: { style: section.style }
-          });
-          sectionEl.after(sectionMetadata);
-        }
-        if (section.id !== sections[sections.length - 1].id) {
-          const hr = document.createElement("hr");
-          sectionEl.before(hr);
-        }
-      }
     }
   }
 
@@ -354,8 +335,7 @@ var CustomImportScript = (() => {
     ]
   };
   var transformers = [
-    transform,
-    ...PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1 ? [transform2] : []
+    transform
   ];
   function executeTransformers(hookName, element, payload) {
     const enhancedPayload = __spreadProps(__spreadValues({}, payload), {
@@ -396,6 +376,23 @@ var CustomImportScript = (() => {
       const main = document.body;
       executeTransformers("beforeTransform", main, payload);
       const pageBlocks = findBlocksOnPage(document, PAGE_TEMPLATE);
+      const sectionBoundaries = [];
+      if (PAGE_TEMPLATE.sections && PAGE_TEMPLATE.sections.length > 1) {
+        PAGE_TEMPLATE.sections.forEach((section, index) => {
+          const selectors = Array.isArray(section.selector) ? section.selector : [section.selector];
+          let sectionEl = null;
+          for (const sel of selectors) {
+            try {
+              sectionEl = document.querySelector(sel);
+            } catch (e) {
+            }
+            if (sectionEl) break;
+          }
+          if (sectionEl) {
+            sectionBoundaries.push({ element: sectionEl, section, index });
+          }
+        });
+      }
       pageBlocks.forEach((block) => {
         const parser = parsers[block.name];
         if (parser) {
@@ -404,6 +401,19 @@ var CustomImportScript = (() => {
           } catch (e) {
             console.error(`Failed to parse ${block.name} (${block.selector}):`, e);
           }
+        }
+      });
+      [...sectionBoundaries].reverse().forEach(({ element: sectionEl, section, index }) => {
+        if (section.style) {
+          const sectionMetadata = WebImporter.Blocks.createBlock(document, {
+            name: "Section Metadata",
+            cells: [["style", section.style]]
+          });
+          sectionEl.after(sectionMetadata);
+        }
+        if (index > 0) {
+          const hr2 = document.createElement("hr");
+          sectionEl.before(hr2);
         }
       });
       executeTransformers("afterTransform", main, payload);

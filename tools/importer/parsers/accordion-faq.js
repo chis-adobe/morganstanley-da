@@ -19,6 +19,7 @@
 export default function parse(element, { document }) {
   const items = element.querySelectorAll('li > .accordion-item-wrapper, li');
   const cells = [];
+  const seenQuestions = new Set();
 
   items.forEach((item) => {
     // Extract question text from the trigger button
@@ -27,7 +28,10 @@ export default function parse(element, { document }) {
     const answerEl = item.querySelector('section[id$="-panel"] > div, .accordion-item > section > div');
 
     if (questionEl && answerEl) {
-      const questionText = questionEl.textContent.trim();
+      const questionText = questionEl.textContent.trim().replace(/^expand_more\s*/, '');
+      // Skip duplicates (E*TRADE renders collapsed + expanded states)
+      if (seenQuestions.has(questionText) || !answerEl.textContent.trim()) return;
+      seenQuestions.add(questionText);
       const questionP = document.createElement('p');
       questionP.textContent = questionText;
       cells.push([questionP, answerEl]);
