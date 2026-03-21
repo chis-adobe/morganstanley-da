@@ -184,7 +184,8 @@ function decorateNavSection(section, megaMenuPanels = []) {
   let panelIdx = 0;
   for (const navItem of items) {
     const panel = panelIdx < megaMenuPanels.length
-      ? megaMenuPanels[panelIdx++] : null;
+      ? megaMenuPanels[panelIdx] : null;
+    if (panel) panelIdx += 1;
     decorateNavItem(navItem, panel);
   }
 }
