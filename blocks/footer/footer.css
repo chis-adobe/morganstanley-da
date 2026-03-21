@@ -73,7 +73,6 @@ footer {
   footer {
     .footer-content {
       padding: 48px 0;
-      grid-template-columns: repeat(4, 1fr);
     }
 
     .section-legal {
