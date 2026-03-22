@@ -41,14 +41,14 @@ export default function init(el) {
     columns.className = 'nav-flyout-columns';
     columns.style.setProperty('--flyout-columns', cells.length - 1);
 
-    for (let i = 1; i < cells.length; i++) {
+    for (let i = 1; i < cells.length; i += 1) {
       cells[i].className = 'nav-flyout-column';
       columns.append(cells[i]);
     }
     menu.append(columns);
 
     /* optional footer rows */
-    for (let r = 1; r < rows.length; r++) {
+    for (let r = 1; r < rows.length; r += 1) {
       const footer = document.createElement('div');
       footer.className = 'nav-flyout-footer';
       while (rows[r].firstChild) footer.append(rows[r].firstChild);
