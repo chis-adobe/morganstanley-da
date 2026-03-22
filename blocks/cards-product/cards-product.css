@@ -64,7 +64,7 @@
   background-color: var(--color-green-600);
 }
 
-@media (width >= 600px) {
+@media (width >= 900px) {
   .block-content:has(.cards-product) {
     grid-template-columns: repeat(2, 1fr);
   }

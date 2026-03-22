@@ -22,19 +22,23 @@ function cleanDetailsHtml(html) {
   return ul;
 }
 
+function getSmartCropSrc(baseUrl, smartCrops) {
+  const crop = getBestSmartCrop(smartCrops, window.innerWidth);
+  const now = new Date();
+  const cacheBuster = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+  return crop ? `${baseUrl}:${crop.name}?ts=${cacheBuster}` : `${baseUrl}?ts=${cacheBuster}`;
+}
+
 function buildBannerImage(banner, title) {
   const { _dmS7Url: baseUrl, _smartCrops: smartCrops } = banner;
   if (!baseUrl) return null;
 
-  const crop = getBestSmartCrop(smartCrops, window.innerWidth);
-  const now = new Date();
-  const cacheBuster = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-  const src = crop ? `${baseUrl}:${crop.name}?ts=${cacheBuster}` : `${baseUrl}?ts=${cacheBuster}`;
-
   const img = document.createElement('img');
-  img.src = src;
+  img.src = getSmartCropSrc(baseUrl, smartCrops);
   img.alt = title || '';
   img.loading = 'lazy';
+  img.dataset.dmUrl = baseUrl;
+  img.dataset.smartCrops = JSON.stringify(smartCrops);
   return img;
 }
 
@@ -65,7 +69,9 @@ export default async function decorate(block) {
     return;
   }
 
-  const { title, offer, details, ctaLabel, ctaUrl, banner } = item;
+  const {
+    title, offer, details, ctaLabel, ctaUrl, banner,
+  } = item;
 
   const ul = document.createElement('ul');
   const li = document.createElement('li');
@@ -114,4 +120,17 @@ export default async function decorate(block) {
   li.append(bodyDiv);
   ul.append(li);
   block.append(ul);
+
+  const cfImg = block.querySelector('.cards-product-cf-card-image img[data-dm-url]');
+  if (cfImg) {
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const url = cfImg.dataset.dmUrl;
+        const crops = JSON.parse(cfImg.dataset.smartCrops || '[]');
+        cfImg.src = getSmartCropSrc(url, crops);
+      }, 150);
+    });
+  }
 }
