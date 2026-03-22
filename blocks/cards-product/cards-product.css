@@ -26,12 +26,14 @@
 .cards-product h3 {
   font-size: var(--heading-font-size-s);
   margin: 0 0 16px;
+  color: var(--color-gray-900);
 }
 
 .cards-product h4 {
   font-size: var(--body-font-size-l);
   font-weight: 600;
   margin: 0 0 12px;
+  color: var(--color-gray-900);
 }
 
 .cards-product ul ul {
