@@ -10,6 +10,8 @@ const HEADER_ACTIONS = [
   '/tools/widgets/language',
   '/tools/widgets/toggle',
 ];
+const DESKTOP_MQ = window.matchMedia('(min-width: 900px)');
+const HOVER_DELAY = 150;
 
 function closeAllMenus() {
   const openMenus = document.body.querySelectorAll('header .is-open');
@@ -179,12 +181,32 @@ function decorateNavSection(section) {
       stripButtons(menu);
       li.append(menu);
 
+      // Click handler (mobile + fallback)
       if (link) {
         link.addEventListener('click', (e) => {
           e.preventDefault();
           toggleMenu(li);
         });
       }
+
+      // Desktop hover intent
+      let hoverTimer;
+      li.addEventListener('mouseenter', () => {
+        if (!DESKTOP_MQ.matches) return;
+        clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(() => {
+          closeAllMenus();
+          document.addEventListener('click', docClose);
+          li.classList.add('is-open');
+        }, HOVER_DELAY);
+      });
+      li.addEventListener('mouseleave', () => {
+        if (!DESKTOP_MQ.matches) return;
+        clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(() => {
+          li.classList.remove('is-open');
+        }, HOVER_DELAY);
+      });
     }
 
     navList.append(li);
