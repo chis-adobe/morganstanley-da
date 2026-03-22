@@ -297,8 +297,8 @@ header {
     }
 
     .mega-menu {
-      > .default-content,
-      > .block-content {
+      > .nav-flyout-columns,
+      > .nav-flyout-footer {
         max-width: var(--grid-container-width);
         margin: 0 auto;
       }

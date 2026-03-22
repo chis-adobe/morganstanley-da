@@ -122,35 +122,12 @@ async function decorateAction(header, pattern) {
   }
 }
 
-function decorateMegaMenu(li, panel) {
-  if (!panel) return null;
-  const wrapper = document.createElement('div');
-  wrapper.className = 'mega-menu';
-  while (panel.firstChild) {
-    wrapper.append(panel.firstChild);
-  }
-  li.append(wrapper);
-  return wrapper;
-}
-
-function decorateNavItem(li, megaMenuPanel) {
-  li.classList.add('main-nav-item');
-  const link = li.querySelector(':scope > p > a')
-    || li.querySelector(':scope > a');
-  if (link) {
-    link.classList.add('main-nav-link');
-    link.classList.remove('button');
-    const bc = link.closest('.button-container');
+function stripButtons(root) {
+  root.querySelectorAll('.button').forEach((btn) => {
+    btn.classList.remove('button');
+    const bc = btn.closest('.button-container');
     if (bc) bc.classList.remove('button-container');
-  }
-  const menu = decorateMegaMenu(li, megaMenuPanel);
-  if (!menu) return;
-  if (link) {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      toggleMenu(li);
-    });
-  }
+  });
 }
 
 function decorateBrandSection(section) {
@@ -167,26 +144,64 @@ function decorateBrandSection(section) {
   }
 }
 
-function decorateNavSection(section, megaMenuPanels = []) {
+/**
+ * Build the main nav list from nav-flyout blocks.
+ * Each .nav-flyout block contains a .nav-flyout-link and
+ * an optional .nav-flyout-menu with columns + footer.
+ */
+function decorateNavSection(section) {
   section.classList.add('main-nav-section');
-  const navContent = section.querySelector('.default-content');
-  const navList = section.querySelector('ul');
-  if (!navList) return;
+
+  const flyouts = [...section.querySelectorAll('.nav-flyout')];
+  if (!flyouts.length) return;
+
+  const navList = document.createElement('ul');
   navList.classList.add('main-nav-list');
+
+  for (const flyout of flyouts) {
+    const li = document.createElement('li');
+    li.classList.add('main-nav-item');
+
+    // Extract the top-level link
+    const linkEl = flyout.querySelector('.nav-flyout-link');
+    const link = linkEl?.querySelector('a');
+
+    if (link) {
+      link.classList.add('main-nav-link');
+      stripButtons(linkEl);
+      li.append(link);
+    }
+
+    // Attach the flyout menu (if any columns exist)
+    const menu = flyout.querySelector('.nav-flyout-menu');
+    if (menu) {
+      menu.classList.add('mega-menu');
+      stripButtons(menu);
+      li.append(menu);
+
+      if (link) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          toggleMenu(li);
+        });
+      }
+    }
+
+    navList.append(li);
+
+    // Remove the original block wrapper from the section
+    const wrapper = flyout.closest('.nav-flyout-wrapper') || flyout;
+    wrapper.remove();
+  }
 
   const nav = document.createElement('nav');
   nav.append(navList);
-  navContent.append(nav);
 
-  const items = [
-    ...section.querySelectorAll('nav > ul > li'),
-  ];
-  let panelIdx = 0;
-  for (const navItem of items) {
-    const panel = panelIdx < megaMenuPanels.length
-      ? megaMenuPanels[panelIdx] : null;
-    if (panel) panelIdx += 1;
-    decorateNavItem(navItem, panel);
+  const defaultContent = section.querySelector('.default-content');
+  if (defaultContent) {
+    defaultContent.append(nav);
+  } else {
+    section.append(nav);
   }
 }
 
@@ -206,13 +221,8 @@ async function decorateHeader(fragment) {
   // Last section = actions/tools
   decorateActionSection(sections[sections.length - 1]);
 
-  // Second section = nav links
-  // Sections 2..n-1 = mega menu panels (matched to nav items)
-  const megaMenuPanels = sections.slice(2, -1);
-  decorateNavSection(sections[1], megaMenuPanels);
-
-  // Remove consumed mega menu sections from DOM
-  megaMenuPanels.forEach((panel) => panel.remove());
+  // Second section = nav (contains nav-flyout blocks)
+  decorateNavSection(sections[1]);
 
   for (const pattern of HEADER_ACTIONS) {
     decorateAction(fragment, pattern);

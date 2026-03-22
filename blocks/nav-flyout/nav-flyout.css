@@ -1,0 +1,9 @@
+.nav-flyout-columns {
+  display: grid;
+  grid-template-columns: repeat(var(--flyout-columns, 1), 1fr);
+  gap: var(--spacing-l);
+}
+
+.nav-flyout-footer {
+  margin-top: var(--spacing-m);
+}
