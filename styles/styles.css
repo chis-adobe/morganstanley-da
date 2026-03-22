@@ -69,7 +69,7 @@
   --spacing-xs: 4px;
 
   /* color schemes */
-  color-scheme: light dark;
+  color-scheme: light;
 
   /* color tokens */
   --color-gray-100: #f1f1f1;
