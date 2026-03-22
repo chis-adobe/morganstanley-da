@@ -67,14 +67,14 @@
 }
 
 /* Secondary CTA - text link with arrow */
-.cards-product a:not(:first-of-type) {
+.cards-product a:has(em) {
   background: none;
   color: var(--color-brand);
   padding: 0;
   margin: 0 0 8px;
 }
 
-.cards-product a:not(:first-of-type):hover {
+.cards-product a:has(em):hover {
   text-decoration: underline;
 }
 
