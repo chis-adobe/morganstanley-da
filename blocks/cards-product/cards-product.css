@@ -66,6 +66,29 @@
   background-color: var(--color-brand-hover);
 }
 
+/* Secondary CTA - text link with arrow */
+.cards-product a:not(:first-of-type) {
+  background: none;
+  color: var(--color-brand);
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.cards-product a:not(:first-of-type):hover {
+  text-decoration: underline;
+}
+
+.cards-product a em {
+  font-style: normal;
+  font-size: 0;
+}
+
+.cards-product a em::after {
+  content: "\2192";
+  font-size: var(--body-font-size-s);
+  margin-left: 4px;
+}
+
 @media (width >= 900px) {
   .block-content:has(.cards-product) {
     grid-template-columns: repeat(2, 1fr);
