@@ -10,6 +10,7 @@
   border-radius: 16px;
   background-color: var(--color-background);
   overflow: hidden;
+  color: var(--color-dark);
 }
 
 .cards-product > ul {

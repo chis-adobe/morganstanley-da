@@ -300,6 +300,19 @@ a {
     max-width: var(--grid-container-width);
     margin: 0 auto;
   }
+
+  > .default-content {
+    margin-bottom: 24px;
+  }
+
+  > .block-content {
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
 }
 
 .section.dark {
