@@ -314,19 +314,17 @@ header {
       overflow: hidden;
       grid-template-rows: initial;
       transition: opacity 0.2s ease, visibility 0.2s ease;
-    }
 
-    .is-open .mega-menu {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .mega-menu {
       > .nav-flyout-columns,
       > .nav-flyout-footer {
         max-width: var(--grid-container-width);
         margin: 0 auto;
       }
+    }
+
+    .is-open .mega-menu {
+      opacity: 1;
+      visibility: visible;
     }
 
     .brand-section {
