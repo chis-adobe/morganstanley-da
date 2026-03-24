@@ -43,7 +43,8 @@ function buildBannerImage(banner, title) {
 }
 
 async function fetchContentFragment(cfPath) {
-  const url = `${GQL_ENDPOINT}${cfPath}`;
+  const ts = Math.floor(Date.now() / 1000);
+  const url = `${GQL_ENDPOINT}${cfPath};ts=${ts}`;
   const resp = await fetch(url);
   if (!resp.ok) throw new Error(`GraphQL request failed: ${resp.status}`);
   const json = await resp.json();
