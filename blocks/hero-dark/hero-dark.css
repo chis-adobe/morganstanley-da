@@ -33,6 +33,7 @@
 
 .hero-dark h1 {
   font-size: var(--heading-font-size-m);
+  color: blue;
   margin: 0 0 8px;
 }
 
