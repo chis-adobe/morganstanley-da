@@ -1,0 +1,114 @@
+/* promo-banner: dark offer card with eyebrow, heading, body and CTAs */
+.promo-banner {
+  --promo-banner-bg: #121213;
+  --promo-banner-border: #4a4a4a;
+  --promo-banner-text: #c5c5c5;
+  --promo-banner-link: #ab80ff;
+  --promo-banner-outline: #7c7c7c;
+
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 24px;
+  border: 1px solid var(--promo-banner-border);
+  border-radius: 16px;
+  background-color: var(--promo-banner-bg);
+  color: var(--promo-banner-text);
+}
+
+.promo-banner .promo-banner-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 16px;
+}
+
+.promo-banner .promo-banner-content > * {
+  margin: 0;
+}
+
+.promo-banner p {
+  font-size: var(--body-font-size-m);
+  line-height: 1.25;
+  color: var(--promo-banner-text);
+}
+
+.promo-banner p strong {
+  color: #fff;
+}
+
+.promo-banner p.promo-banner-eyebrow {
+  font-family: "Courier New", monospace;
+  font-size: var(--body-font-size-s);
+  letter-spacing: 0.14px;
+  color: #fff;
+}
+
+.promo-banner .promo-banner-heading {
+  font-size: var(--heading-font-size-l);
+  font-weight: 600;
+  line-height: 1.15;
+  color: #fff;
+}
+
+.promo-banner .promo-banner-heading sup {
+  font-size: 0.5em;
+}
+
+.promo-banner .promo-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.promo-banner .promo-banner-actions a {
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.promo-banner .promo-banner-actions a.btn {
+  padding: 8px 15px;
+  border: 1px solid var(--color-brand);
+  border-radius: 2px;
+  background-color: var(--color-brand);
+  color: #fff;
+}
+
+.promo-banner .promo-banner-actions a.btn:hover {
+  border-color: var(--color-brand-hover);
+  background-color: var(--color-brand-hover);
+}
+
+.promo-banner .promo-banner-actions a.btn.btn-outline {
+  border-color: var(--promo-banner-outline);
+  background-color: transparent;
+  color: #fff;
+}
+
+.promo-banner .promo-banner-actions a.btn.btn-outline:hover {
+  border-color: #fff;
+}
+
+.promo-banner .promo-banner-actions a.promo-banner-link {
+  color: var(--promo-banner-link);
+}
+
+.promo-banner .promo-banner-actions a.promo-banner-link::after {
+  content: "\2192";
+  margin-left: 6px;
+}
+
+.promo-banner .promo-banner-actions a.promo-banner-link:hover {
+  text-decoration: underline;
+}
+
+@media (width >= 900px) {
+  .promo-banner .promo-banner-heading {
+    font-size: 28px;
+  }
+}
