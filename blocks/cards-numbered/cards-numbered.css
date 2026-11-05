@@ -10,6 +10,14 @@
   border-radius: 16px;
   padding: 32px;
   background-color: var(--color-background);
+  color: var(--color-gray-900);
+}
+
+/* keep card text dark inside dark sections (overrides .section.dark text colours) */
+.block-content .cards-numbered h3,
+.block-content .cards-numbered p,
+.block-content .cards-numbered a {
+  color: var(--color-gray-900);
 }
 
 .cards-numbered > ul {

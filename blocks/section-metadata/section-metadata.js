@@ -67,7 +67,9 @@ function handleBackground(background, section) {
     section.style.backgroundColor = color.startsWith('color-token')
       ? `var(${color.replace('color-token', '--color')})`
       : color;
-    setColorScheme(section);
+    // dark backgrounds get the same treatment as "style: dark" (light text, blocks unchanged)
+    if (getColorScheme(section) === 'dark-scheme') section.classList.add('dark');
+    else setColorScheme(section);
   }
 }
 
