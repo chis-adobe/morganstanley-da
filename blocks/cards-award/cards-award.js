@@ -1,3 +1,16 @@
+import loadIcons from '../../scripts/utils/icons.js';
+
+/** Turns a cell whose only text is ":icon-name:" into that icon (if not already converted). */
+function decorateIconText(cell) {
+  const match = cell.textContent.trim().match(/^:([a-z0-9-]+):$/);
+  if (!match) return false;
+  const span = document.createElement('span');
+  span.className = `icon icon-${match[1]}`;
+  cell.replaceChildren(span);
+  loadIcons([span]);
+  return true;
+}
+
 /**
  * Cards Award
  * Each row is an award: [icon | title, description, source].
@@ -18,7 +31,8 @@ export default function decorate(block) {
     }
     const li = document.createElement('li');
     cells.forEach((cell) => {
-      const iconOnly = cell.querySelector('.icon, svg, picture') && !cell.textContent.trim();
+      const iconOnly = decorateIconText(cell)
+        || (cell.querySelector('.icon, svg, picture') && !cell.textContent.trim());
       cell.className = iconOnly ? 'cards-award-icon' : 'cards-award-body';
       li.append(cell);
     });
