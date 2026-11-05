@@ -146,6 +146,8 @@ function decorateUtilitySection(section) {
   const list = section.querySelector('ul');
   if (!list) return;
   list.classList.add('utility-list');
+  // loose lists wrap item content in <p>; unwrap so links sit directly in the <li>
+  list.querySelectorAll('li > p').forEach((p) => p.replaceWith(...p.childNodes));
   [...list.children].forEach((li, idx) => {
     li.classList.add('utility-item');
     const submenu = li.querySelector(':scope > ul');
