@@ -10,13 +10,15 @@ const HEADER_ACTIONS = [
   '/tools/widgets/language',
   '/tools/widgets/toggle',
 ];
-const DESKTOP_MQ = window.matchMedia('(min-width: 900px)');
+const DESKTOP_MQ = window.matchMedia('(min-width: 1200px)');
 const HOVER_DELAY = 150;
 
 function closeAllMenus() {
   const openMenus = document.body.querySelectorAll('header .is-open');
   for (const openMenu of openMenus) {
     openMenu.classList.remove('is-open');
+    openMenu.querySelectorAll(':scope > [aria-expanded]')
+      .forEach((toggle) => toggle.setAttribute('aria-expanded', 'false'));
   }
 }
 
@@ -132,9 +134,114 @@ function stripButtons(root) {
   });
 }
 
+const SEARCH_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="m15.5 15.5 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+const CLOSE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+/**
+ * Utility links shown top-right above the toolbar.
+ * A list item with plain text and a nested list becomes a dropdown.
+ */
+function decorateUtilitySection(section) {
+  section.classList.add('utility-section');
+  const list = section.querySelector('ul');
+  if (!list) return;
+  list.classList.add('utility-list');
+  [...list.children].forEach((li, idx) => {
+    li.classList.add('utility-item');
+    const submenu = li.querySelector(':scope > ul');
+    if (!submenu) return;
+    const label = [...li.childNodes]
+      .filter((n) => n !== submenu)
+      .map((n) => n.textContent).join('').trim();
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'utility-toggle';
+    button.textContent = label;
+    button.setAttribute('aria-expanded', 'false');
+    submenu.id = `utility-menu-${idx}`;
+    submenu.classList.add('utility-menu');
+    button.setAttribute('aria-controls', submenu.id);
+    button.addEventListener('click', () => {
+      const open = !li.classList.contains('is-open');
+      closeAllMenus();
+      li.classList.toggle('is-open', open);
+      button.setAttribute('aria-expanded', String(open));
+      if (open) document.addEventListener('click', docClose);
+    });
+    li.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !li.classList.contains('is-open')) return;
+      closeAllMenus();
+      button.focus();
+    });
+    li.replaceChildren(button, submenu);
+  });
+}
+
+/**
+ * Turns the "Search" link into a toggle that opens a search field over the toolbar.
+ * The link href is the search results page; the query is sent as "q".
+ */
+function decorateSearch(section) {
+  const link = [...section.querySelectorAll('a')]
+    .find((a) => a.textContent.trim().toLowerCase() === 'search');
+  if (!link) return;
+  const container = link.closest('p') || link;
+
+  const search = document.createElement('div');
+  search.className = 'header-search';
+  search.innerHTML = `
+    <button type="button" class="header-search-toggle" aria-label="Search" aria-expanded="false">${SEARCH_ICON}</button>
+    <form class="header-search-form" role="search" action="${link.href}" method="get">
+      <label class="header-search-label" for="header-search-input">Search by keyword or symbol</label>
+      <input id="header-search-input" type="search" name="q" placeholder="Enter keyword/symbol" autocomplete="off">
+      <button type="button" class="header-search-close" aria-label="Close search">${CLOSE_ICON}</button>
+    </form>`;
+  const toggle = search.querySelector('.header-search-toggle');
+  const input = search.querySelector('input');
+  const setOpen = (open) => {
+    search.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    if (open) input.focus();
+    else toggle.focus();
+  };
+  toggle.addEventListener('click', () => setOpen(true));
+  search.querySelector('.header-search-close').addEventListener('click', () => setOpen(false));
+  search.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+  container.replaceWith(search);
+}
+
+function decorateMobileToggle(header, actions, nav) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'header-menu-toggle';
+  button.setAttribute('aria-label', 'Open menu');
+  button.setAttribute('aria-expanded', 'false');
+  button.innerHTML = '<span></span><span></span><span></span>';
+  if (nav) {
+    nav.id = 'header-main-nav';
+    button.setAttribute('aria-controls', nav.id);
+  }
+  button.addEventListener('click', () => {
+    const open = header.classList.toggle('is-mobile-open');
+    button.setAttribute('aria-expanded', String(open));
+    button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  (actions.querySelector('.default-content') || actions).append(button);
+}
+
 function decorateBrandSection(section) {
   section.classList.add('brand-section');
-  const brandLink = section.querySelector('a');
+  let brandLink = section.querySelector('a');
+  const picture = section.querySelector('picture');
+  if (!brandLink && picture) {
+    brandLink = document.createElement('a');
+    brandLink.href = '/';
+    brandLink.setAttribute('aria-label', picture.querySelector('img')?.alt || 'Home');
+    picture.replaceWith(brandLink);
+    brandLink.append(picture);
+  }
   if (!brandLink) return;
   const textNodes = [...brandLink.childNodes]
     .filter((n) => n.nodeType === 3 && n.textContent.trim());
@@ -231,20 +338,39 @@ async function decorateActionSection(section) {
   section.classList.add('actions-section');
 }
 
-async function decorateHeader(fragment) {
+async function decorateHeader(fragment, header) {
   const sections = [
     ...fragment.querySelectorAll(':scope > .section'),
   ];
   if (sections.length < 3) return;
 
-  // First section = brand
-  decorateBrandSection(sections[0]);
+  // Optional first section = utility links (shown top right)
+  const utility = sections.length > 3 ? sections.shift() : null;
+  if (utility) decorateUtilitySection(utility);
 
-  // Last section = actions/tools
-  decorateActionSection(sections[sections.length - 1]);
+  const [brand, nav] = sections;
+  const actions = sections[sections.length - 1];
+  decorateBrandSection(brand);
+  decorateActionSection(actions);
+  decorateNavSection(nav);
+  decorateSearch(actions);
 
-  // Second section = nav (contains nav-flyout blocks)
-  decorateNavSection(sections[1]);
+  // Keep a copy of the primary CTA in the mobile menu
+  const cta = actions.querySelector('a.btn');
+  const navList = nav.querySelector('.main-nav-list');
+  if (cta && navList) {
+    const li = document.createElement('li');
+    li.className = 'main-nav-item main-nav-cta';
+    li.append(cta.cloneNode(true));
+    navList.append(li);
+  }
+  decorateMobileToggle(header, actions, nav.querySelector('nav'));
+
+  // Brand, nav and actions sit together in the rounded toolbar
+  const toolbar = document.createElement('div');
+  toolbar.className = 'header-toolbar';
+  toolbar.append(brand, nav, actions);
+  fragment.append(toolbar);
 
   for (const pattern of HEADER_ACTIONS) {
     decorateAction(fragment, pattern);
@@ -263,7 +389,7 @@ export default async function init(el) {
       `${locale.prefix}${path}`,
     );
     fragment.classList.add('header-content');
-    await decorateHeader(fragment);
+    await decorateHeader(fragment, el);
     el.append(fragment);
   } catch (e) {
     throw Error(e);
