@@ -332,6 +332,61 @@ a {
   color: var(--color-light);
 }
 
+/* folder-tab separator, added by section metadata "tab: left | right" */
+.section.has-tab {
+  --section-tab-height: 80px;
+  --section-tab-radius: 16px;
+  --section-tab-split: 35%;
+  --section-tab-outline: transparent;
+
+  padding-top: 0;
+  padding-bottom: 60px;
+
+  /* separate the sub-groups (heading after a block) inside one folder */
+  > .block-content + .default-content {
+    margin-top: 64px;
+  }
+}
+
+.section.tab-right {
+  --section-tab-split: 75%;
+}
+
+.section.tab-outline {
+  --section-tab-outline: #ccc;
+}
+
+.section > .section-tab {
+  display: flex;
+  height: var(--section-tab-height);
+  margin-bottom: 20px;
+  background: linear-gradient(var(--section-tab-prev-bg, var(--color-background)) 50%, transparent 50%);
+}
+
+.section-tab > span {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+.section-tab .section-tab-raised {
+  flex: 0 0 var(--section-tab-split);
+  border-top: 1px solid var(--section-tab-outline);
+  border-right: 1px solid var(--section-tab-outline);
+  border-top-right-radius: var(--section-tab-radius);
+  background-color: var(--section-tab-bg, var(--color-background));
+  clip-path: inset(0 0 var(--section-tab-radius) 0);
+}
+
+.section-tab .section-tab-rest {
+  flex: 1;
+  margin-left: -1px;
+  border-bottom: 1px solid var(--section-tab-outline);
+  border-left: 1px solid var(--section-tab-outline);
+  border-bottom-left-radius: var(--section-tab-radius);
+  background-color: var(--section-tab-prev-bg, var(--color-background));
+  clip-path: inset(var(--section-tab-radius) 0 0 0);
+}
+
 .section.light-gray {
   background-color: var(--color-gray-100);
   color: var(--color-dark);

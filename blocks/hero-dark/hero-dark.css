@@ -15,6 +15,22 @@
   color: #fff;
 }
 
+/* inside a light section the hero becomes a contained dark card */
+.section:not(.dark) > .block-content:has(.hero-dark) {
+  max-width: var(--grid-container-width);
+}
+
+.section:not(.dark) .hero-dark {
+  max-width: none;
+  border-radius: 16px;
+  background-color: #121213;
+}
+
+.section:not(.dark) .hero-dark h2,
+.section:not(.dark) .hero-dark p {
+  color: #fff;
+}
+
 .hero-dark > div:first-child {
   flex: 0 0 auto;
 }

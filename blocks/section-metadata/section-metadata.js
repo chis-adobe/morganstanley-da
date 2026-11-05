@@ -86,6 +86,30 @@ async function handleStyle(text, section) {
   section.classList.add(...styles);
 }
 
+/**
+ * Adds a folder-tab separator at the top of the section. The raised tab uses this
+ * section's background and steps down to the previous section's background.
+ * @param {string} text - tab position: "left" (step at 35%) or "right" (step at 75%)
+ * @param {Element} section
+ */
+function handleTab(text, section) {
+  const position = text === 'right' ? 'right' : 'left';
+  const transparent = 'rgba(0, 0, 0, 0)';
+  const ownBg = getComputedStyle(section).backgroundColor;
+  const prev = section.previousElementSibling;
+  const prevBg = prev ? getComputedStyle(prev).backgroundColor : transparent;
+  if (ownBg !== transparent) section.style.setProperty('--section-tab-bg', ownBg);
+  if (prevBg !== transparent) section.style.setProperty('--section-tab-prev-bg', prevBg);
+  if (prevBg === ownBg) section.classList.add('tab-outline');
+  section.classList.add('has-tab', `tab-${position}`);
+
+  const tab = document.createElement('div');
+  tab.className = 'section-tab';
+  tab.setAttribute('aria-hidden', 'true');
+  tab.innerHTML = '<span class="section-tab-raised"></span><span class="section-tab-rest"></span>';
+  section.prepend(tab);
+}
+
 async function handleLayout(text, section, type) {
   if (text === '0') return;
   if (type === 'grid') section.classList.add('grid');
@@ -112,8 +136,9 @@ export default async function init(el) {
   if (metadata.spacing?.text) handleLayout(metadata.spacing.text, section, 'spacing');
   if (metadata.container?.text) handleLayout(metadata.container.text, section, 'container');
   if (metadata.layout?.text) handleLayout(metadata.layout.text, section, 'layout');
-  if (metadata['background-color']?.content) handleBackground(metadata['background-color'].content, section);
-  if (metadata['background-image']?.content) handleBackground(metadata['background-image'].content, section);
+  if (metadata['background-color']?.content) handleBackground(metadata['background-color'], section);
+  if (metadata['background-image']?.content) handleBackground(metadata['background-image'], section);
   if (metadata.background?.content) handleBackground(metadata.background, section);
+  if (metadata.tab?.text) handleTab(metadata.tab.text, section);
   el.remove();
 }
