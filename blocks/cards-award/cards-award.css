@@ -1,0 +1,91 @@
+/* cards-award: awards in columns with icon, title, description and source */
+.cards-award:not(:last-child) {
+  margin-bottom: 64px;
+}
+
+.cards-award > ul {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cards-award > ul > li {
+  margin: 0;
+}
+
+.cards-award .cards-award-icon {
+  margin-bottom: 24px;
+  line-height: 0;
+  color: var(--color-gray-900);
+
+  .icon,
+  svg,
+  img {
+    width: 64px;
+    height: 64px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.cards-award .cards-award-body > * {
+  margin: 0;
+}
+
+.block-content .cards-award .cards-award-body h3 {
+  margin-bottom: 10px;
+  font-size: var(--heading-font-size-xs);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--color-gray-900);
+}
+
+.cards-award .cards-award-body p {
+  font-size: var(--body-font-size-m);
+  line-height: 1.25;
+  color: var(--color-gray-900);
+}
+
+.cards-award .cards-award-body p + p {
+  margin-top: 20px;
+}
+
+.cards-award .cards-award-body .cards-award-source {
+  color: #666;
+  font-weight: 600;
+}
+
+.cards-award .cards-award-footer {
+  margin: 48px 0 0;
+
+  a {
+    color: var(--color-brand);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+
+    &::after {
+      content: "\2192";
+      margin-left: 6px;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (width >= 900px) {
+  .cards-award > ul {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .block-content .cards-award .cards-award-body h3 {
+    font-size: 22px;
+  }
+}

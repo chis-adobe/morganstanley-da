@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><svg id="money-envelope" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round">
+    <path d="M6 30 L32 12 L58 30 V58 H6 Z" />
+    <path d="M6 30 L32 46 L58 30" />
+    <path d="M6 58 L26 42 M58 58 L38 42" />
+    <rect x="22" y="4" width="20" height="34" rx="1.5" transform="rotate(-12 32 21)" />
+    <circle cx="32" cy="21" r="4" />
+</svg>
