@@ -93,6 +93,7 @@
 }
 
 .carousel-article .carousel-article-slide-body {
+  color: blue
   display: flex;
   flex-direction: column;
   gap: 12px;
